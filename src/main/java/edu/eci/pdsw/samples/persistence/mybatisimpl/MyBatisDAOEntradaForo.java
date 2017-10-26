@@ -38,13 +38,29 @@ public class MyBatisDAOEntradaForo implements DaoEntradaForo{
     
     @Override
     public EntradaForo load(int id) throws PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            return efmapper.getEntradaForoId(id);
+        }
+        catch(Exception e){
+            throw new PersistenceException("Error al consultar el foro:"+ id + ", " + e.getLocalizedMessage(), e);
+        }
     }
 
     @Override
     public List<EntradaForo> loadAll() throws PersistenceException {
         try{
             return efmapper.getEntradaForo();
+        }
+        catch(Exception e){
+            throw new PersistenceException("Error al consultar los foros:"+e.getLocalizedMessage(), e);
+        }
+        
+    }
+    
+    @Override
+    public List<EntradaForo> loadAllVulgaridades() throws PersistenceException {
+        try{
+            return efmapper.getEntradasForoVulgaridades();
         }
         catch(Exception e){
             throw new PersistenceException("Error al consultar los foros:"+e.getLocalizedMessage(), e);

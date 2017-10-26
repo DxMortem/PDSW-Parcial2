@@ -31,7 +31,26 @@
         INNER JOIN USUARIOS as autor ON autor.email=ef.USUARIOS_email
         LEFT OUTER JOIN USUARIOS as autorcom ON autorcom.email=cm.USUARIOS_email
     </select>
-
+    
+    <select id="getEntradaForoId" resultMap="EntradaForoResult">
+        select ef.id, ef.fecha_hora, ef.contenido, cm.id as cmt_id, cm.fecha_hora as cmt_fecha_hora, cm.contenido as cmt_contenido, autor.nombre as ef_nombre, autor.email as ef_email, autorcom.nombre as cmt_cm_nombre,  autorcom.email as cmt_cm_email
+        from ENTRADAS_FOROS as ef 
+        LEFT OUTER JOIN COMENTARIOS as cm ON ef.`id` = cm.`ENTRADAS_FOROS_id` 
+        INNER JOIN USUARIOS as autor ON autor.email=ef.USUARIOS_email
+        LEFT OUTER JOIN USUARIOS as autorcom ON autorcom.email=cm.USUARIOS_email
+        WHERE ef.id = #{id} 
+        ORDER BY cm.fecha_hora DESC
+    </select>
+    
+    <select id="getEntradasForoVulgaridades" resultMap="EntradaForoResult">
+        select ef.id, ef.fecha_hora, ef.contenido, cm.id as cmt_id, cm.fecha_hora as cmt_fecha_hora, cm.contenido as cmt_contenido, autor.nombre as ef_nombre, autor.email as ef_email, autorcom.nombre as cmt_cm_nombre,  autorcom.email as cmt_cm_email
+        from ENTRADAS_FOROS as ef 
+        LEFT OUTER JOIN COMENTARIOS as cm ON ef.`id` = cm.`ENTRADAS_FOROS_id` 
+        INNER JOIN USUARIOS as autor ON autor.email=ef.USUARIOS_email
+        LEFT OUTER JOIN USUARIOS as autorcom ON autorcom.email=cm.USUARIOS_email
+        WHERE ef.contenido LIKE '%recorcholis%' or ef.contenido LIKE '%carambolas%' or cm.contenido LIKE '%recorcholis%' or cm.contenido LIKE '%carambolas%'
+        ORDER BY ef.fecha_hora DESC
+    </select>
 
   	
 </mapper>

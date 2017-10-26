@@ -16,9 +16,7 @@
  */
 package edu.eci.pdsw.samples.tests;
 
-import edu.eci.pdsw.samples.entities.Comentario;
 import edu.eci.pdsw.samples.entities.EntradaForo;
-import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosSuscripciones;
 import edu.eci.pdsw.samples.services.ServiciosForosFactory;
 import java.sql.Connection;
@@ -26,9 +24,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,37 +61,55 @@ public class ServicesJUnitTest {
     private Connection getConnection() throws SQLException{
         return DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "anonymous", "anonymous");        
     }
+        
     
     @Test
-    public void pruebaCeroTest() throws SQLException, ExcepcionServiciosSuscripciones {
+    public void pruebaConsultarForosPorId() throws SQLException, ExcepcionServiciosSuscripciones {
         //Insertar datos en la base de datos de pruebas, de acuerdo con la clase
         //de equivalencia correspondiente
         Connection conn=getConnection();
         Statement stmt=conn.createStatement();        
         
-        
+        stmt.execute("INSERT INTO `USUARIOS` (`email`, `nombre`) VALUES ('juan.perez@gmail.com','Juan Perez'), ('luis.diaz@hotmail.com','Luis Diaz'), ('diego.borrero@gmail.com','Diego Borrero')");
+        stmt.execute("INSERT INTO `ENTRADAS_FOROS` (`id`, `fecha_hora`, `contenido`, `USUARIOS_email`) VALUES (3,'2017-10-26 07:19:06','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.','juan.perez@gmail.com'),(5,'2017-10-26 09:19:06','Memento mori.','diego.borrero@gmail.com')");
         stmt.execute("INSERT INTO `COMENTARIOS` (`id`, `fecha_hora`, `contenido`, `ENTRADAS_FOROS_id`, `USUARIOS_email`) VALUES (1,'2017-10-26 08:02:08','Sin comentarios',3,'juan.perez@gmail.com')");
-
-        stmt.execute("INSERT INTO `ENTRADAS_FOROS` (`id`, `fecha_hora`, `contenido`, `USUARIOS_email`) VALUES (3,'2017-10-26 07:19:06','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.','juan.perez@gmail.com')");
-
-        stmt.execute("INSERT INTO `USUARIOS` (`email`, `nombre`) VALUES ('juan.perez@gmail.com','Juan Perez'), ('luis.diaz@hotmail.com','Luis Diaz')");
 
         conn.commit();
         conn.close();
 	
         //Realizar la operacion de la logica y la prueba
         
-        
-        List<EntradaForo> lef=ServiciosForosFactory.getInstance().getTestingForumServices().consultarForos();
-
-        
-        for (EntradaForo ef:lef){
-            System.out.println(ef);
-        }
-        //assert ...
-        Assert.fail("Pruebas no implementadas aun...");
-        
-    }    
+        try{
+            EntradaForo lef = ServiciosForosFactory.getInstance().getTestingForumServices().consultarForosPorId(5);
+            Assert.assertTrue(lef.getIdentificador() == 5);
+        }catch(Exception e){
+            Assert.fail("No se logró consultar la entrada numero 5: "+ e.getLocalizedMessage());
+        }        
+    }
     
+    @Test
+    public void pruebaConsultarForosConVulgaridades() throws SQLException, ExcepcionServiciosSuscripciones {
+        //Insertar datos en la base de datos de pruebas, de acuerdo con la clase
+        //de equivalencia correspondiente
+        Connection conn=getConnection();
+        Statement stmt=conn.createStatement();        
+        
+        stmt.execute("INSERT INTO `USUARIOS` (`email`, `nombre`) VALUES ('juan.perez@gmail.com','Juan Perez'), ('luis.diaz@hotmail.com','Luis Diaz'), ('diego.borrero@gmail.com','Diego Borrero')");
+        stmt.execute("INSERT INTO `ENTRADAS_FOROS` (`id`, `fecha_hora`, `contenido`, `USUARIOS_email`) VALUES (3,'2017-10-26 07:19:06','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.','juan.perez@gmail.com'),(5,'2017-10-26 09:19:06','carambolas mori.','diego.borrero@gmail.com')");
+        stmt.execute("INSERT INTO `COMENTARIOS` (`id`, `fecha_hora`, `contenido`, `ENTRADAS_FOROS_id`, `USUARIOS_email`) VALUES (1,'2017-10-26 08:02:08','Sin comentarios',3,'juan.perez@gmail.com')");
+
+        conn.commit();
+        conn.close();
+	
+        //Realizar la operacion de la logica y la prueba
+        
+        try{
+            List<EntradaForo> lef = ServiciosForosFactory.getInstance().getTestingForumServices().consultarForosConVulgaridades();
+            Assert.assertTrue(lef.get(0).getIdentificador() == 5);
+        }catch(Exception e){
+            Assert.fail("No se logró obtener la consulta con la vulgaridad: "+ e.getLocalizedMessage());
+        }
+        
+    }
 
 }

@@ -34,5 +34,9 @@ public interface EntradaForoMapper {
     
     List<EntradaForo> getEntradaForo();
     
+    EntradaForo getEntradaForoId(@Param("id") int id);
+    
+    List<EntradaForo> getEntradasForoVulgaridades();
+    
     
 }

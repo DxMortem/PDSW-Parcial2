@@ -20,6 +20,7 @@ import edu.eci.pdsw.samples.entities.Comentario;
 import edu.eci.pdsw.samples.entities.EntradaForo;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosSuscripciones;
 import edu.eci.pdsw.samples.services.ServiciosForosFactory;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,6 +36,25 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class EntradasForosBean {
     
+    EntradaForo entradaActiva;
+    int id;
+
+    public EntradaForo getEntradaActiva() {
+        return entradaActiva;
+    }
+
+    public void setEntradaActiva(EntradaForo entradaActiva) {
+        this.entradaActiva = entradaActiva;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     
     public List<EntradaForo> getData() throws Exception{
         try {
@@ -44,6 +64,30 @@ public class EntradasForosBean {
             throw ex;
         }
         
+    }
+    
+    public void getDataid() throws Exception{
+        try {
+            entradaActiva = ServiciosForosFactory.getInstance().getForumsServices().consultarForosPorId(id);
+        } catch (ExcepcionServiciosSuscripciones ex) {
+            throw ex;
+        }
+        
+    }
+    
+    public List<EntradaForo> getDataVulgaridades() throws Exception{
+        try {
+            return ServiciosForosFactory.getInstance().getForumsServices().consultarForosConVulgaridades();
+        } catch (ExcepcionServiciosSuscripciones ex) {
+            throw ex;
+        }
+        
+    }
+    
+    public List<Comentario> getComentariosForo(){
+        if(entradaActiva!=null){
+            return entradaActiva.getRespuestas();
+        }return null;
     }
     
 }

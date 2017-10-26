@@ -31,6 +31,8 @@ public interface DaoEntradaForo {
     
     public List<EntradaForo> loadAll() throws PersistenceException;
     
+    public List<EntradaForo> loadAllVulgaridades() throws PersistenceException;
+    
     public void save(EntradaForo e) throws PersistenceException;
     
     public void update(EntradaForo e) throws PersistenceException;

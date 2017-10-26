@@ -29,7 +29,7 @@ public interface ServiciosForos {
      * @throws ExcepcionServiciosSuscripciones si NO existe un foro con dicho
      * identificador, o si se presenta otro problema en las capas inferiores.
      */
-    public List<EntradaForo> consultarForosPorId(int id) throws ExcepcionServiciosSuscripciones;
+    public EntradaForo consultarForosPorId(int id) throws ExcepcionServiciosSuscripciones;
     
     /**
      * Consulta una entrada de foro a partir de su identificador

@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Consulta de Foros</title>
     </h:head>
@@ -10,10 +11,35 @@
         <h1>Consulta de foros</h1>
         <h:form>
             <!--Por favor no cambiar el 'id':-->
-            <p:inputText id="id_entrada_foro"></p:inputText>
+            <p:inputText id="id_entrada_foro" value="#{mb.id}"></p:inputText>
             
             <!--Por favor no cambiar el 'value':-->
-            <p:commandButton value="Consultar"></p:commandButton>
+            <p:commandButton value="Consultar" actionListener="#{mb.getDataid()}" update="Entrada"></p:commandButton>
+            
+            <p:panel id="Entrada" header="Entrada Foro" visible="true">
+                <p:dataTable var="i" value="#{mb.entradaActiva}">
+                    <p:column headerText="Fecha de creación">
+                        <h:outputText value="#{i.fechayHora}"/>
+                    </p:column>
+                    <p:column headerText="Pregunta Planteada">
+                        <h:outputText value="#{i.comentario}"/>
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable var="i" value="#{mb.comentariosForo}" rowKey="#{i.fechayHora}">
+                    <f:facet name="header">
+                        Lista de Comentarios
+                    </f:facet>
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{i.fechayHora}"/>
+                    </p:column>
+                    <p:column headerText="Autor">
+                        <h:outputText value="#{i.autor.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Contenido">
+                        <h:outputText value="#{i.contenido}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
             
         </h:form>
     </h:body>
